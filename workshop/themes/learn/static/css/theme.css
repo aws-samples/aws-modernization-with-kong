@@ -70,7 +70,7 @@ pre {
     border: 1px solid #eaeaea;
 }
 b, strong, label, th {
-    font-weight: 400;
+    font-weight: 600;
 }
 .default-animation, #header #logo-svg, #header #logo-svg path, #sidebar, #sidebar ul, #body, #body .padding, #body .nav {
     -webkit-transition: all 0.5s ease;
@@ -261,7 +261,7 @@ textarea:focus, input[type="email"]:focus, input[type="number"]:focus, input[typ
 #sidebar ul.topics ul ul {
     padding-bottom: 0;
 }
-#sidebar ul.topics li.parent > ul {
+#sidebar ul.topics li.parent ul, #sidebar ul.topics > li.active ul {
     display: block;
 }
 #sidebar ul.topics > li > a {
@@ -436,7 +436,7 @@ textarea:focus, input[type="email"]:focus, input[type="number"]:focus, input[typ
     border-bottom: 4px solid #F0F2F4;
 }
 #chapter p {
-    text-align: justify;
+    text-align: center;
     font-size: 1.2rem;
 }
 #footer {
@@ -1078,12 +1078,12 @@ pre .copy-to-clipboard {
     position: absolute;
     right: 4px;
     top: 4px;
-    background-color: #949bab;
+    background-color: #C1C4C6;
     color: #ccc;
     border-radius: 2px;
 }
 pre .copy-to-clipboard:hover {
-    background-color: #656c72;
+    background-color: #00bdf3;
     color: #fff;
 }
 .parent-element {
@@ -1127,6 +1127,17 @@ pre .copy-to-clipboard:hover {
     padding-left: 1rem;
 }
 
+#homelinks {
+  background-color: #9c6fb6;
+  color: #fff;
+  padding: 7px 0;
+  border-bottom: 4px solid #9c6fb6;
+}
+
 #searchResults {
     text-align: left;
+}
+
+option {
+    color: initial;
 }
