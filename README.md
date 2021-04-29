@@ -92,3 +92,9 @@ title = "Mon atelier AWS"
 weight = 2
 languageName = "Français"
 ```
+
+## Preparing your workshop for open source
+
+**[ACTION REQUIRED]** If you plan to open source your workshop:
+
+Before commiting your workshop package to `aws-samples` or another open source repository you must run the `open-source.sh` script in the root directory. This script will remove the bundled `learn` theme and replace it with a git submodule linking to the Hugo Learn theme found here: [https://github.com/matcornic/hugo-theme-learn](https://github.com/matcornic/hugo-theme-learn)
