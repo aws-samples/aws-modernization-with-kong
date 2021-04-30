@@ -10,4 +10,22 @@ cd ../../
 
 #update workshop/config.toml to use hugo-theme-learn
 sed -i '' 's/^theme.*/theme = \"hugo-theme-learn\"/' workshop/config.toml
-echo "Updated ./config.toml to use hugo-theme-learn."
+echo "Updated config.toml to use hugo-theme-learn."
+
+#remove known AWS logos from the codebase
+if [ -e workshop/static/images/aws-open-source.jpg ]; then
+    rm workshop/static/images/aws-open-source.jpg
+    echo "Removed workshop/static/images/aws-open-source.jpg."
+fi
+
+if [ -e workshop/static/images/apn-logo.jpg ]; then
+    rm workshop/static/images/apn-logo.jpg
+    echo "Removed workshop/static/images/apn-logo.jpg."
+fi
+
+if [ -e workshop/content/shortcodes/attachments/_index.en.files/AWS_AWS_logo_RGB.png ]; then
+    rm workshop/content/shortcodes/attachments/_index.en.files/AWS_AWS_logo_RGB.png
+    echo "Removed workshop/content/shortcodes/attachments/_index.en.files/AWS_AWS_logo_RGB.png."
+fi
+
+
