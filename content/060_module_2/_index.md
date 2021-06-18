@@ -1,5 +1,5 @@
 ---
-title: "Module 2"
+title: "Module 2 Title"
 chapter: true
 draft: false
 weight: 6
