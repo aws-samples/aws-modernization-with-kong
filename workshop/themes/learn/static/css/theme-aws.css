@@ -64,7 +64,7 @@ h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-family: "Amazon Ember", "Novacento Sans Wide", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    font-family: "Amazon Ember", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
 }
 
 a {
@@ -170,7 +170,7 @@ a:hover {
 }
 
 #sidebar #shortcuts h3 {
-    font-family: "Amazon Eber", "Novacento Sans Wide", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    font-family: "Amazon Ember", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
     color: white !important;
     margin-top:1rem;
     padding-left: 1rem;

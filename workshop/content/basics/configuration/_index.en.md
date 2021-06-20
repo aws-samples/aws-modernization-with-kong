@@ -12,8 +12,8 @@ Note that some of these parameters are explained in details in other sections of
 ```toml
 [params]
   # Prefix URL to edit current page. Will display an "Edit this page" button on top right hand corner of every page. 
-  # Useful to give opportunity to people to create merge request for your doc.
-  # See the config.toml file from this documentation site to have an example.
+  # This is only relevant if you're open-sourcing your source markdown on Github; by default we provide you with 
+  # a private CodeCommit repo so you do not need or want to expose an EditURL:
   editURL = ""
   # Author of the site, will be used in meta information
   author = ""
