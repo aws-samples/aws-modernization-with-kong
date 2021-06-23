@@ -97,4 +97,20 @@ languageName = "Français"
 
 **[ACTION REQUIRED]** If you plan to open source your workshop:
 
-Before commiting your workshop package to `aws-samples` or another open source repository you must run the `open-source.sh` script in the root directory. This script will remove the bundled `learn` theme and replace it with a git submodule linking to the Hugo Learn theme found here: [https://github.com/matcornic/hugo-theme-learn](https://github.com/matcornic/hugo-theme-learn)
+Before commiting your workshop package to `aws-samples` or another open source repository you must run the `open-source.sh` script in the root directory. This script will zip up the following directories and files: 
+
+```
+workshop/content
+workshop/static
+workshop/config.toml
+README-local.md
+theme.sh 
+```
+
+The resulting workshop.zip file should be attached to your SIM ticket for review by the Open Source team.
+
+**It is your responsibility to confirm** that no boilerplate content is included in your final zip (e.g.; Make sure you remove the template content from the workshop/content/ directory and you are not including Amazon IP or logos in the workshop/static/ directory).
+
+The end user will `git clone` your workshop markdown from `aws-samples` and follow the instructions in README-local.md to copy the open source Hugo Learn theme and run `hugo serve` to render the markdown locally.
+
+**[ACTION REQUIRED]** If you use shortcodes in your workshop markdown you should review the currently supported shortcodes in the Hugo Learn theme that users will be using: [https://github.com/matcornic/hugo-theme-learn](https://github.com/matcornic/hugo-theme-learn). Shortcodes such as `img` and `siteurl` may not be supported by the open source Hugo theme and that markdown should be changed prior to running `open-source.sh`. Failure to address missing shortcodes will result in the user being unable to build the workshop locally. To test the workshop yourself run `open-source.sh` and unzip the workshop.zip file. Open a terminal window from the unpacked workshop directory and follow the steps in `README-local.md` to pull the Hugo Learn theme and run `hugo learn`. If Hugo detects any undefined shortcodes they will be presented as a build error. 
