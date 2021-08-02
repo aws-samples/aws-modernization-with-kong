@@ -19,59 +19,69 @@ Before using Hybrid mode, you need a certificate/key pair. Kong Gateway provides
 
 To have an easier deployment we're going to use the Shared Mode and OpenSSL to issue the pair. The command below creates two files "cluster.key" and "cluster.crt".
 
-<pre>
+```
 openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
   -keyout ./cluster.key -out ./cluster.crt \
   -days 1095 -subj "/CN=kong_clustering"
-</pre>
-
-
-
+```
 
 ## Configure Kong Konnect Helm Charts to install the Control Plane and Data Plane
 Before installing the Control Plane make sure you have Helm installed locally:
-<pre>
-$ helm version
+
+```
+helm version
+```
+```
 version.BuildInfo{Version:"v3.6.0", GitCommit:"7f2df6467771a75f5646b7f12afb408590ed1755", GitTreeState:"dirty", GoVersion:"go1.16.4"}
-</pre>
+```
 
 Now add Kong Helm Charts repo:
-<pre>
-$ helm repo add kong https://charts.kong.com
+
+```
+helm repo add kong https://charts.konghq.com
+```
+```
 "kong" has been added to your repositories
-</pre>
+```
 
 You should see it:
-<pre>
-$ helm repo ls
+```
+helm repo ls
+```
+```
 NAME   	URL                               
 kong   	https://charts.konghq.com
-</pre>
+```
 
 If you want to update it run:
-<pre>
-$ helm repo update
+
+```
+helm repo update
+```
+```
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "kong" chart repository
 Update Complete. ⎈ Happy Helming!⎈ 
-</pre>
+```
 
 
 ## Control Plane
 Let's get started deploying the Kong Konnect Control Plane. First of all, create a "kong" namespace:
-<pre>
+
+```
 kubectl create namespace kong
-</pre>
+```
 
 Create a Kubernetes secret with the pair
-<pre>
+
+```
 kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./cluster.key -n kong
-</pre>
+```
 
 
 Install the Control Plane
 
-<pre>
+```
 helm install kong kong/kong -n kong \
 --set ingressController.enabled=true \
 --set ingressController.installCRDs=false \
@@ -106,24 +116,26 @@ helm install kong kong/kong -n kong \
 --set postgresql.postgresqlUsername=kong \
 --set postgresql.postgresqlDatabase=kong \
 --set postgresql.postgresqlPassword=kong
-</pre>
+```
 
 Control Plane uses port 8005 to publish any new API configuration it has. On the other hand, Data Plane uses the port 8006 to report back all metrics regarding API Consumption.
 
 ## Data Plane
 Create another Kubernetes namespace specifically for the Data Plane:
-<pre>
+
+```
 kubectl create namespace kong-dp
-</pre>
+```
 
 Create the secret for the Data Plane using the same Digital Certicate and Private Key pair:
-<pre>
+
+```
 kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./cluster.key -n kong-dp
-</pre>
+```
 
 Install the Data Plane
 
-<pre>
+```
 helm install kong-dp kong/kong -n kong-dp \
 --set ingressController.enabled=false \
 --set image.repository=kong/kong-gateway \
@@ -146,23 +158,28 @@ helm install kong-dp kong/kong -n kong-dp \
 --set portalapi.enabled=false \
 --set env.status_listen=0.0.0.0:8100 \
 --set secretVolumes[0]=kong-cluster-cert
-</pre>
+```
 
 Note we're using the Control Plane's Kubernetes FQDN to get the Data Plane connected to it.
 
 ## Checking the Installation
 
-<pre>
-$ kubectl get deployment --all-namespaces
+```
+kubectl get deployment --all-namespaces
+```
+
+```
 NAMESPACE     NAME           READY   UP-TO-DATE   AVAILABLE   AGE
 default       sample         1/1     1            1           107m
 kong-dp       kong-dp-kong   1/1     1            1           30s
 kong          kong-kong      1/1     1            1           80s
 kube-system   coredns        2/2     2            2           3h40m
-</pre>
+```
 
-<pre>
-$ kubectl get pod --all-namespaces
+```
+kubectl get pod --all-namespaces
+```
+```
 NAMESPACE     NAME                              READY   STATUS      RESTARTS   AGE
 kong-dp       kong-dp-kong-75478bfcff-sq8f6     1/1     Running     0          37s
 kong          kong-kong-5c5cbf7d54-xvszn        2/2     Running     0          101s
@@ -172,10 +189,12 @@ kube-system   aws-node-kjz2s                    1/1     Running     0          1
 kube-system   coredns-85cc4f6d5-868x9           1/1     Running     0          18h
 kube-system   coredns-85cc4f6d5-jjcjq           1/1     Running     0          18h
 kube-system   kube-proxy-6gwdp                  1/1     Running     0          18h
-</pre>
+```
 
-<pre>
-$ kubectl get service --all-namespaces
+```
+kubectl get service --all-namespaces
+```
+```
 NAMESPACE     NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP                                                                  PORT(S)                         AGE
 default       kubernetes                   ClusterIP      10.100.0.1       <none>                                                                       443/TCP                         18h
 kong-dp       kong-dp-kong-proxy           LoadBalancer   10.100.12.30     a6bf3f71a14a64dba850480616af8fc9-1188819016.eu-central-1.elb.amazonaws.com   80:32336/TCP,443:31316/TCP      102s
@@ -189,27 +208,36 @@ kong          kong-kong-proxy              LoadBalancer   10.100.36.75     a498d
 kong          kong-postgresql              ClusterIP      10.100.70.30     <none>                                                                       5432/TCP                        2m46s
 kong          kong-postgresql-headless     ClusterIP      None             <none>                                                                       5432/TCP                        2m46s
 kube-system   kube-dns                     ClusterIP      10.100.0.10      <none>                                                                       53/UDP,53/TCP                   18h
-</pre>
+```
 
 
 
 ## Checking the Kong Konnect Rest Admin API port
 Use the Load Balancer created during the deployment
-<pre>
-$ kubectl get service kong-kong-admin \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n kong
-aeaea72cf7352414ba4ec598c8200f4a-1395366732.eu-central-1.elb.amazonaws.com
-</pre>
 
-<pre>
-$ http aeaea72cf7352414ba4ec598c8200f4a-1395366732.eu-central-1.elb.amazonaws.com:8001 | jq .version
+```
+CONTROL_PLANE_LB=$(kubectl get service kong-kong-admin \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n kong)
+```
+```
+echo $CONTROL_PLANE_LB
+```
+
+```
+http $CONTROL_PLANE_LB:8001 | jq .version
+
+```
+```
 "2.4.1.1-enterprise-edition"
-</pre>
+```
 
 
 ## Checking the Data Plane from the Control Plane
 
-<pre>
-$ http aeaea72cf7352414ba4ec598c8200f4a-1395366732.eu-central-1.elb.amazonaws.com:8001/clustering/status
+```
+http $CONTROL_PLANE_LB:8001/clustering/status
+```
+
+```
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
@@ -230,20 +258,26 @@ vary: Origin
         "last_seen": 1625759130
     }
 }
-</pre>
+```
 
 
 
 ## Checking the Data Plane Proxy
 Use the Load Balancer created during the deployment
 
-<pre>
-$ kubectl get svc -n kong-dp kong-dp-kong-proxy --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-a6bf3f71a14a64dba850480616af8fc9-1188819016.eu-central-1.elb.amazonaws.com
-</pre>
+```
+DATA_PLANE_LB=$(kubectl get svc -n kong-dp kong-dp-kong-proxy --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+```
 
-<pre>
-$ http a6bf3f71a14a64dba850480616af8fc9-1188819016.eu-central-1.elb.amazonaws.com
+```
+echo $DATA_PLANE_LB
+```
+
+```
+http $DATA_PLANE_LB
+```
+
+```
 HTTP/1.1 404 Not Found
 Connection: keep-alive
 Content-Length: 48
@@ -255,24 +289,28 @@ X-Kong-Response-Latency: 0
 {
     "message": "no Route matched with those values"
 }
-</pre>
+```
 
 
 ## Configuring Kong Manager Service
 Kong Manager is the Control Plane Admin GUI. It should get the Admin URI configured with the same Load Balancer address:
-<pre>
-kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_API_URI\", \"value\": \"aeaea72cf7352414ba4ec598c8200f4a-1395366732.eu-central-1.elb.amazonaws.com:8001\" }]}]}}}}"
-</pre>
+
+```
+kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_API_URI\", \"value\": \"$CONTROL_PLANE_LB:8001\" }]}]}}}}"
+```
 
 ### Logging to Kong Manager
 Login to Kong Manager using the specific ELB:
 
-<pre>
-$ kubectl get svc -n kong kong-kong-manager --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-a9be7d6800a0c4f40b9cfac10c0fd65a-1065253554.eu-central-1.elb.amazonaws.com
-</pre>
+```
+KONG_MANAGER=$(kubectl get svc -n kong kong-kong-manager --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+```
 
-If you redirect your browser to http://a9be7d6800a0c4f40b9cfac10c0fd65a-1065253554.eu-central-1.elb.amazonaws.com:8002 you should see the Kong Manager landing page:
+```
+echo $KONG_MANAGER
+```
+
+Open the output from above in a browser and you should see the Kong Manager landing page:
 
 
 ![kong_manager](/images/kong_manager.png)
