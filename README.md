@@ -1,7 +1,10 @@
-# Aws-workshop-template
+# AWS Workshop Studio has launched 
 
-This repo provides the templating to make it easy to create a workshop similar to those available at [net-immersionday.workshop.aws](https://net-immersionday.workshop.aws/), and [eksworkshop.com](https://eksworkshop.com/)
+Workshop publishing as moved to AWS Workshop Studio as of August 2021. 
 
+For more information on publishing workshops, and for help in making the right decision for your workshop, please consult our [wiki](https://w.amazon.com/bin/view/AWS/Teams/SA/Customer_Engagements/workshops/).
+
+If your workshop source code will be hosted on GitHub under aws-samples you may proceed with this template, and note the special instructions for open sourcing under the "Preparing your workshop for open source" heading below.
 
 ## 2021 update on standardizing workshop creation, hosting, and discovery:
 
