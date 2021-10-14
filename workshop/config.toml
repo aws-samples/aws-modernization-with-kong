@@ -14,14 +14,14 @@ pygmentsCodeFences = true
 pygmentsStyle = "monokai"
 
 [params]
-  description = "My AWS Workshop"
+  description = "Kong on AWS"
   author = "Amazon AWS"
   disableBreadcrumb = false
   disableNextPrev = false
   themeVariant = "aws"
   disableSearch = false
   disableAssetsBusting = true
-  disableLanguageSwitchingButton = false
+  disableLanguageSwitchingButton = true
   disableShortcutsTitle = true
   disableInlineCopyToClipBoard = true
 
