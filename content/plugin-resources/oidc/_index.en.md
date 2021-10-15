@@ -19,102 +19,68 @@ In this workshop, we will configure this plugin to use [Amazon Cognito](https://
 
 #### Creating AWS Cognito
 
-First of all, let's create a Cognito instance using the AWS Console
-
-* Navigate to AWS Console by clicking [this deep link](https://us-east-2.console.aws.amazon.com/cognito/home?region=us-east-2#) and click on **Managed User Pools** and on **Create a user pool**.
-* Name your pool as **kongpool** and click on **Step through settings**.
-* Select **Email address or phone number** and, under that, select **Allow email addresses**.
-* Select the following standard attributes as required
-  * email
-  * family name
-  * given name
-
-![cognito1](/images/cognito1.png)
-
-
-* Click on **Next step**.
-* For the next pages, **Policies**, **MFA and verifications**, **Message customizations** and **Tags**, click on **Next step**.
-* In the page **Devices**, select **No** for **Do you want to remember your user’s devices** and click on **Next step**.
-* In the pages **App clients** and **Triggers** click on **Next step**.
-* In the page **Review** click on **Create pool**. Take note of the **Pool Id**.
-
-![cognito2](/images/cognito2.png)
-
-
-
-
-#### Application Definition
-* Click on **App clients** left menu option.
-
-* Click on **Add an app client** and enter with the following data:
-  * App client name: kong-api
-  * Refresh token expiration (days): 30
-  * Generate client secret: on
-  * Enable lambda trigger based custom authentication (ALLOW_CUSTOM_AUTH): off
-  * Enable username password based authentication (ALLOW_USER_PASSWORD_AUTH): on
-  * Enable SRP (secure remote password) protocol based authentication (ALLOW_USER_SRP_AUTH): off
-
-* Click on **Set attribute read and write permissions**<p>
-Uncheck everything except the **email**, **family name** and **given name** fields.
-
-![cognito3](/images/cognito3.png)
-
-* Click on **Create app client** and on **Show details**
-
-* Take note of the **App client id**.
-
-* Click on **Details** and take note of the **App client secret**. 
-
-![cognito4](/images/cognito4.png)
-
-
-
-
-
-
-#### Register the Ingress endpoint in Cognito
-Return to your Cognito User Pool to register the Ingress.
-
-* Click on **App integration** -> **App client settings**.
-* Click the **Cognito User Pool**
-
-In the **Callback URL(s)** field type insert your URLs like this. Note that AWS Cognito doesn’t support HTTP callback URLs. This field should include the Ingresses that you want to secure using AWS Cognito. For this workshop, get the output from `echo $DATA_PLANE_LB/bar` and mention in this field.
-
-* Click **Authorization code grant**.
-* Click **email**, **openid**, **aws.cognito.signin.user.admin** and **profile**.
-
-![cognito5](/images/cognito5.png)
-
-
-* Click on **Save changes**.
-* Click on **Choose domain name**.
-
-In the **Domain prefix** field type **kongidp** and click on **Check availability** to make sure it's available.
-
-![cognito6](/images/cognito6.png)
-
-
-* Click on **Save changes**.
-
-
-
-
-#### Test the Ingress
+Run the following command to create the AWS Cognito Resources using a CloudFormation templates
 
 ```bash
-curl -i $DATA_PLANE_LB/bar 
+curl -O https://raw.githubusercontent.com/aws-samples/aws-modernization-with-kong/master/templates/cognito.yaml
+aws cloudformation  deploy --template-file cognito.yaml --stack-name cognito-$C9_PID \
+--parameter-overrides ClientName=$C9_PID-client Domain=$C9_PID PoolName=$C9_PID-pool CallBackUrl=https://$DATA_PLANE_LB/bar
+echo "export COGNITO_CLIENT_ID=$(aws cloudformation describe-stack-resources --stack-name cognito-$C9_PID | jq -r '.StackResources[] | select(.ResourceType=="AWS::Cognito::UserPoolClient") | .PhysicalResourceId')" >> ~/.bashrc
+bash
+echo "export COGNITO_POOL_ID=$(aws cloudformation describe-stack-resources --stack-name cognito-$C9_PID | jq -r '.StackResources[] | select(.ResourceType=="AWS::Cognito::UserPool") | .PhysicalResourceId')" >> ~/.bashrc
+bash
+echo "ISSUER=https://cognito-idp.$AWS_REGION.amazonaws.com/$COGNITO_POOL_ID" >> ~/.bashrc
+bash
+
 ```
 
-**Exected Output**
+**NOTE** We are using `$C9_PID` environment variable in the above commands, so that each cognito pool created by users of this workshop is unique. If you are running this workshop at your own cadance without AWS Cloud9 environment, ensure to set this environment variable
+
+Fetch the client secret
 
 ```bash
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 45
-Content-Type: text/html; charset=utf-8
-Date: Fri, 08 Oct 2021 12:40:56 GMT
-Server: Werkzeug/1.0.1 Python/3.7.4
-Via: kong/2.5.1.0-enterprise-edition
-X-Kong-Proxy-Latency: 1
-X-Kong-Upstream-Latency: 1
+echo "export CLIENT_SECRET=$(aws cognito-idp describe-user-pool-client --user-pool-id $COGNITO_POOL_ID --client-id $COGNITO_CLIENT_ID --query 'UserPoolClient.ClientSecret')" >> ~/.bashrc
+bash
 ```
+#### Installing OIDC Plugin
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: oidc
+  namespace: default
+config:
+  client_id: [$COGNITO_CLIENT_ID]
+  client_secret: [$CLIENT_SECRET]
+  issuer: "$ISSUER"
+  cache_ttl: 10
+  redirect_uri: ["https://$DATA_PLANE_LB/bar"]
+plugin: openid-connect
+EOF
+```
+
+#### Apply OIDC plugin to the Ingress
+
+```bash
+kubectl patch ingress demo -p '{"metadata":{"annotations":{"konghq.com/plugins":"oidc"}}}'
+```
+#### Verification
+
+Copy output of `echo https://$DATA_PLANE_LB/bar` and paste in browser.
+
+After accepting the Server Certificate, since you haven't been authenticated, you will be redirected to Cognito's Authentication page:
+
+![cognito7](/images/cognito7.png)
+
+
+Click on "Sign up" to register.
+
+![cognito8](/images/cognito8.png)
+
+
+After entering your data click on "Sign Up". Cognito will create a user and request the verification code sent by your email.
+
+
+After typing the code, Cognito will authenticate you, issues an Authorization Code and redirects you back to the original URL (Data Plane). The Data Plane connects to Cognito with the Authorization Code to get the Access Token and then allows you to consume the URL.
