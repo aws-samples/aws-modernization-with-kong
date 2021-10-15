@@ -31,11 +31,6 @@ Considering the capabilities provided by the Kubernetes platform, running Data P
 
 * Load Balancing: The Kubernetes Service notion defines an abstraction level on top of the "pod" replicas that might have been up or down (due HPA policies, for instance). Kubernetes keeps all the "pod" replicas hidden from the "callers" through Services.
 
-
-{{% notice note %}}
-TODO : ADD MORE NARRATIVE
-{{% /notice %}}
-
 {{% notice warning %}}
 This tutorial is intended to be used for labs and PoC only. There are many aspects and processes, typically implemented in production sites, not described here. For example: Digital Certificate issuing, Cluster monitoring, etc. For a production ready deployment, refer Kong on AWS CDK Constructs, available [here](https://constructs.dev/search?q=kong&offset=0)
 {{% /notice %}}

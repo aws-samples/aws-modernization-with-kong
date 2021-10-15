@@ -54,21 +54,24 @@ NAME                 DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE S
 cloudwatch-agent     3         3         3       3            3           <none>          2m43s
 fluentd-cloudwatch   3         3         3       3            3           <none>          2m43s
 ```
-
-
 #### Configuring Kong Enterprise to output metrics and logs to AWS CloudWatch. 
 
 We will use File Log plugin to source Kong's request and response data in JSON format to `/dev/stdout` , which then will be picked up by the FluentD daemonsets and sent to CloudWatch Logs.
 
 ```bash
-echo '
-apiVersion: configuration.konghq.com/v1
-kind: KongPlugin
-metadata:
-  name: global-file-log
-config: 
-  path: /dev/stdout
-  reopen: false
-plugin: file-log
-' | kubectl apply -f -
+curl -X POST http://$CONTROL_PLANE_LB:8001/plugins/ \
+    --data "name=file-log"  \
+    --data "config.path=/dev/stdout" \
+    --data "config.reopen=false"
 ```
+
+**Note** We used Kong's admin API to install this plugin. For other available options, [refer here](https://docs.konghq.com/hub/kong-inc/file-log/) 
+
+
+Within few minutes, you can see the logs and metrics data flowing in to AWS CloudWatch.
+
+* [Logs](https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#logsV2:log-groups)
+* [Container Insights](https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#container-insights:infrastructure)
+
+
+Now that we have completed the setup, move on to the next chapter to install the sample application and use Ingress controllers to see how Kong Gateway protects your application and telemetry.

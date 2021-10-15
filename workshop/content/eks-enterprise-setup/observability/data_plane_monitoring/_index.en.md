@@ -227,37 +227,45 @@ EOF
 Expose the new Prometheus service
 
 ```bash
-kubectl expose service prometheus-operated --name prometheus-operated-lb --type=LoadBalancer -n kong-dp
+kubectl expose service prometheus-operated --name prometheus-operated-lb -n kong-dp
 ```
 
 ```bash
 kubectl get service -n kong-dp
 ```
 
-```bash
-echo "export PROM_OPERATED_LB=$(kubectl get service prometheus-operated-lb -n kong-dp \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> ~/.bashrc
-bash
-```
-
-Copy the output from `echo $PROM_OPERATED_LB:9090` and paste in a browser to access the service. 
-
 **Expected Output**
 
 ```bash
-NAME                     TYPE           CLUSTER-IP      EXTERNAL-IP                                                                  PORT(S)                      AGE
-kong-dp-kong-proxy       LoadBalancer   10.100.12.30    a6bf3f71a14a64dba850480616af8fc9-1188819016.eu-central-1.elb.amazonaws.com   80:32336/TCP,443:31316/TCP   78m
-kong-dp-monitoring       ClusterIP      10.100.91.54    <none>                                                                       8100/TCP                     24m
-prometheus-operated      ClusterIP      None            <none>                                                                       9090/TCP                     20m
-prometheus-operated-lb   LoadBalancer   10.100.81.131   a6c91b4ef9c9543b285aea42c00fbbb2-2102856654.eu-central-1.elb.amazonaws.com   9090:31259/TCP               4s
+NAME                     TYPE           CLUSTER-IP      EXTERNAL-IP                                                               PORT(S)                      AGE
+kong-dp-kong-proxy       LoadBalancer   10.100.11.50    a31effa06182047d7b6f24af2d938054-1892572230.us-east-2.elb.amazonaws.com   80:30251/TCP,443:32310/TCP   56m
+kong-dp-monitoring       ClusterIP      10.100.22.163   <none>                                                                    8100/TCP                     5m36s
+prometheus-operated      ClusterIP      None            <none>                                                                    9090/TCP                     4m1s
+prometheus-operated-lb   ClusterIP      10.100.26.253   <none>                                                                    9090/TCP                     5s
 ```
 
 #### Adding New Prometheus Service to Grafana
 
 Create a new Grafana Data Source based on the Prometheus Service URL: **http://prometheus-operated.kong-dp.svc.cluster.local:9090**
 
+To do so, copy the **output** from the following command and open in a browser.
+
+```bash
+echo $GRAFANA_LB/datasources/new
+```
+
+Select **Prometheus** , paste **http://prometheus-operated.kong-dp.svc.cluster.local:9090** in HTTP > URL section and hit **Save & Test**
+
 ![grafana_newdatasource](/images/grafana_newdatasource.png)
 
 Now, based on this new Data Source, import the official Kong Grafana Dashboard with id **7424**
+
+To do so, copy the **output** from the following command and open in a browser.
+
+```bash
+echo $GRAFANA_LB/dashboard/import
+```
+Enter **7424** under "Import via grafana.com" > **Load**
 
 ![grafana_newdashboard](/images/grafana_newdashboard.png)
 

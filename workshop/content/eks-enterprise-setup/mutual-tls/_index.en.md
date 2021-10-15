@@ -38,4 +38,12 @@ kubectl create namespace kong
 kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./cluster.key -n kong
 ```
 
+#### Mount the license key as Kubernetes Secret
+
+
+```bash
+kubectl create secret -n kong generic kong-enterprise-license --from-file=license=./license.json
+```
+
+
 You have now reached the end of this module by provisioning the Certificate key pair, required to provision Kong Control Plane

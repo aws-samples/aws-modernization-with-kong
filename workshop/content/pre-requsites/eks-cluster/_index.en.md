@@ -1,6 +1,6 @@
 +++
 title = "Amazon EKS"
-weight = 14
+weight = 13
 +++
 
 #### Create a EKS Cluster

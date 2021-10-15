@@ -23,8 +23,7 @@ kubectl create namespace prometheus
 
 ```bash
 helm install prometheus -n prometheus prometheus-community/kube-prometheus-stack \
---set alertmanager.service.type=LoadBalancer \
---set prometheus.service.type=LoadBalancer \
+--set alertmanager.enabled=false \
 --set grafana.service.type=LoadBalancer
 ```
 
@@ -63,29 +62,9 @@ prometheus-kube-state-metrics-84dfc44b69-nl5n9           1/1     Running   0    
 prometheus-prometheus-kube-prometheus-prometheus-0       2/2     Running   1          27m
 prometheus-prometheus-node-exporter-jtzts                1/1     Running   0          27m
 ```
-
-#### Check Prometheus
-
-Get the Prometheus' Load Balancer address
-
-```bash
-echo "export PROMETHEUS_LB=$(kubectl get service prometheus-kube-prometheus-prometheus -n prometheus \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> ~/.bashrc
-bash
-```
-
-```bash
-echo $PROMETHEUS_LB:9090
-```
-
-Copy the output and open in your browser
-
-![prometheus](/images/prometheus.png)
-
-
-
 #### Check Grafana
 
-Do the same thing for Grafana
+Export the load balancer for Grafana
 
 ```bash
 echo "export GRAFANA_LB=$(kubectl get service prometheus-grafana -n prometheus \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> ~/.bashrc

@@ -21,9 +21,9 @@ helm install kong kong/kong -n kong \
 --set ingressController.enabled=true \
 --set ingressController.installCRDs=false \
 --set ingressController.image.repository=kong/kubernetes-ingress-controller \
---set ingressController.image.tag=1.3.1-alpine \
+--set ingressController.image.tag=2.0.1 \
 --set image.repository=kong/kong-gateway \
---set image.tag=2.4.1.1-alpine \
+--set image.tag=2.6.0.0-alpine \
 --set env.database=postgres \
 --set env.role=control_plane \
 --set env.cluster_cert=/etc/secrets/kong-cluster-cert/tls.crt \
@@ -44,6 +44,7 @@ helm install kong kong/kong -n kong \
 --set enterprise.portal.enabled=false \
 --set enterprise.rbac.enabled=false \
 --set enterprise.smtp.enabled=false \
+--set enterprise.license_secret=kong-enterprise-license \
 --set manager.enabled=true \
 --set manager.type=LoadBalancer \
 --set secretVolumes[0]=kong-cluster-cert \
@@ -118,7 +119,7 @@ curl $CONTROL_PLANE_LB:8001 | jq .version
 **Expected Output**
 
 ```
-"2.4.1.1-enterprise-edition"
+"2.6.0.0-enterprise-edition"
 ```
 #### Configuring Kong Manager Service
 

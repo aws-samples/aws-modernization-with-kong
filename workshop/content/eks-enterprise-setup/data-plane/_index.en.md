@@ -26,7 +26,7 @@ kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./clu
 helm install kong-dp kong/kong -n kong-dp \
 --set ingressController.enabled=false \
 --set image.repository=kong/kong-gateway \
---set image.tag=2.4.1.1-alpine \
+--set image.tag=2.6.0.0-alpine \
 --set env.database=off \
 --set env.role=data_plane \
 --set env.cluster_cert=/etc/secrets/kong-cluster-cert/tls.crt \

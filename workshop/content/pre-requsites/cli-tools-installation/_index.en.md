@@ -1,6 +1,6 @@
 +++
 title = "Command Line Utilities"
-weight = 13
+weight = 12
 +++
 
 #### Launching AWS Cloud9
