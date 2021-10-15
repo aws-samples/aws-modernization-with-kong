@@ -1,9 +1,7 @@
 RelativeURLs=true
 CanonifyURLs=true
-languageCode = "en-US"
-defaultContentLanguage = "en"
 
-title = "My AWS Workshop"
+title = "Kong on AWS"
 theme = "learn"
 metaDataFormat = "yaml"
 defaultContentLanguageInSubdir= true
@@ -41,14 +39,3 @@ home = [ "HTML", "RSS", "JSON"]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
-
-[Languages]
-[Languages.en]
-title = "My AWS Workshop"
-weight = 1
-languageName = "English"
-
-[Languages.fr]
-title = "Mon atelier AWS"
-weight = 2
-languageName = "Français"
