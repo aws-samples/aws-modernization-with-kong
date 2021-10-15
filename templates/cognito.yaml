@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This template will launch the Modernization Workshop CI/CD Pipeline.
+Parameters:
+    PoolName:
+        Type: String
+        Description: Cognito Pool Name
+    ClientName:
+        Type: String
+        Description: ClientName 
+    CallBackUrl:
+        Type: String
+        Description: CallBackUrl
+    Domain:
+        Type: String
+        Description: Domain
+
+Resources:
+    CognitoUserPool:
+        Type: AWS::Cognito::UserPool
+        Properties: 
+            MfaConfiguration: "OFF"
+            UsernameAttributes: 
+                - email
+            UserPoolName: !Sub PoolName
+    CognitoAppClient:
+        Type: AWS::Cognito::UserPoolClient
+        Properties: 
+            AllowedOAuthFlows:
+                - code
+            AllowedOAuthScopes:
+                - email
+                - openid
+                - profile
+                - aws.cognito.signin.user.admin
+            CallbackURLs: 
+                - !Ref CallBackUrl
+            ClientName: !Ref ClientName
+            EnableTokenRevocation: True
+            ExplicitAuthFlows: 
+                - ALLOW_USER_PASSWORD_AUTH
+                - ALLOW_REFRESH_TOKEN_AUTH
+            GenerateSecret: True
+            PreventUserExistenceErrors: ENABLED
+            ReadAttributes: 
+                - email
+            UserPoolId: !Ref CognitoUserPool
+            WriteAttributes: 
+                - email
+    CognitoDomain:
+        Type: AWS::Cognito::UserPoolDomain
+        Properties: 
+            Domain: !Ref Domain
+            UserPoolId: !Ref CognitoUserPool
