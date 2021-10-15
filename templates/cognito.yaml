@@ -51,3 +51,10 @@ Resources:
         Properties: 
             Domain: !Ref Domain
             UserPoolId: !Ref CognitoUserPool
+
+Outputs:
+    ClientId:
+        Value: !Ref CognitoAppClient
+    PoolId:
+        Value: !Ref CognitoUserPool
+    
