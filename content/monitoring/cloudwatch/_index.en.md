@@ -3,7 +3,17 @@ title = "AWS CloudWatch"
 weight = 11
 +++
 
-#### Querying CloudWatch Logs
+#### Viewing CloudWatch Logs
+
+Observe the log groups at [in the console](https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#logsV2:log-groups). You will notice the following log groups per cluster
+
+* /aws/containerinsights/{ClusterName}}/application
+* /aws/containerinsights/{ClusterName}}/host
+* /aws/containerinsights/{ClusterName}}/dataplane
+* /aws/containerinsights/{ClusterName}}/performance 
+#### Querying CloudWatch Logs using logs insights
+
+Click on `/aws/containerinsights/{ClusterName}}/application` and **View in Logs Insights**. Run the following query, which details the entire request and response logged using Kong Plugin
 
 ```bash
 filter kubernetes.namespace_name='kong-dp'
