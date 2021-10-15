@@ -21,7 +21,7 @@ Resources:
             MfaConfiguration: "OFF"
             UsernameAttributes: 
                 - email
-            UserPoolName: !Sub PoolName
+            UserPoolName: !Ref PoolName
     CognitoAppClient:
         Type: AWS::Cognito::UserPoolClient
         Properties: 
