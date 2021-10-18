@@ -25,6 +25,14 @@ Resources:
                 AttributeDataType: String
                 Name: email
                 Required: true
+            -
+                AttributeDataType: String
+                Name: family_name
+                Required: true
+            -
+                AttributeDataType: String
+                Name: given_name
+                Required: true
             UsernameAttributes: 
                 - email
             UserPoolName: !Ref PoolName
@@ -51,10 +59,14 @@ Resources:
             PreventUserExistenceErrors: ENABLED
             ReadAttributes: 
                 - email
+                - family_name
+                - given_name
             UserPoolId: !Ref CognitoUserPool
             AllowedOAuthFlowsUserPoolClient: true
             WriteAttributes: 
                 - email
+                - family_name
+                - given_name
     CognitoDomain:
         Type: AWS::Cognito::UserPoolDomain
         Properties: 
