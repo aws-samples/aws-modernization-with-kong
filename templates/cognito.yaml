@@ -18,13 +18,21 @@ Resources:
     CognitoUserPool:
         Type: AWS::Cognito::UserPool
         Properties: 
-            MfaConfiguration: "OFF"
+            AutoVerifiedAttributes:
+            - email
+            Schema:
+            -
+                AttributeDataType: String
+                Name: email
+                Required: true
             UsernameAttributes: 
                 - email
             UserPoolName: !Ref PoolName
     CognitoAppClient:
         Type: AWS::Cognito::UserPoolClient
         Properties: 
+            SupportedIdentityProviders:
+                - COGNITO
             AllowedOAuthFlows:
                 - code
             AllowedOAuthScopes:
@@ -35,15 +43,16 @@ Resources:
             CallbackURLs: 
                 - !Ref CallBackUrl
             ClientName: !Ref ClientName
-            EnableTokenRevocation: True
+            # EnableTokenRevocation: True
             ExplicitAuthFlows: 
                 - ALLOW_USER_PASSWORD_AUTH
                 - ALLOW_REFRESH_TOKEN_AUTH
-            GenerateSecret: True
+            GenerateSecret: false
             PreventUserExistenceErrors: ENABLED
             ReadAttributes: 
                 - email
             UserPoolId: !Ref CognitoUserPool
+            AllowedOAuthFlowsUserPoolClient: true
             WriteAttributes: 
                 - email
     CognitoDomain:
