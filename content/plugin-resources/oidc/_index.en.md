@@ -29,9 +29,8 @@ echo "export COGNITO_CLIENT_ID=$(aws cloudformation describe-stack-resources --s
 bash
 echo "export COGNITO_POOL_ID=$(aws cloudformation describe-stack-resources --stack-name cognito-$C9_PID | jq -r '.StackResources[] | select(.ResourceType=="AWS::Cognito::UserPool") | .PhysicalResourceId')" >> ~/.bashrc
 bash
-echo "ISSUER=https://cognito-idp.$AWS_REGION.amazonaws.com/$COGNITO_POOL_ID" >> ~/.bashrc
+echo "ISSUER=https://cognito-idp.$AWS_REGION.amazonaws.com/$COGNITO_POOL_ID/.well-known/openid-configuration" >> ~/.bashrc
 bash
-
 ```
 
 **NOTE** We are using `$C9_PID` environment variable in the above commands, so that each cognito pool created by users of this workshop is unique. If you are running this workshop at your own cadance without AWS Cloud9 environment, ensure to set this environment variable
