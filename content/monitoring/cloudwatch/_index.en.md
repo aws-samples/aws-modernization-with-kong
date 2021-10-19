@@ -17,8 +17,14 @@ Click on `/aws/containerinsights/{ClusterName}}/application` and **View in Logs 
 
 ```bash
 filter kubernetes.namespace_name='kong-dp'
-| parse log '"upstream_uri":"*"' as upstream_uri
-| parse log '"request":{"uri":"*","url":"*","querystring":*,"headers":{"accept-encoding":"*","connection":"*","user-agent":"*","accept":"*","host":"*"},"size":*,"method":"*"}' as request_uri, request_uri, request_url, request_querystring, request_encoding, request_connection, request_user_agent, request_accept, request_host, request_host, request_size, request_method
 | parse log '"workspace":"*"' as workspace
-| filter ispresent(request_uri)
+| filter ispresent(workspace)
+| display log
+
 ```
+
+You can view the entire request and response json logged
+
+![cloudwatch_logs_insights](/images/logs_insights.png)
+
+For more details on the log format and each property meaning, explore [plugin documentation](https://docs.konghq.com/hub/kong-inc/file-log/#log-format)
