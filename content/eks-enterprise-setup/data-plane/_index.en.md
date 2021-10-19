@@ -3,14 +3,6 @@ title = "Kong Data Plane"
 weight = 13
 +++
 
-#### Create Namespace for Kong Data Plane
-
-Create another Kubernetes namespace specifically for the Data Plane:
-
-```bash
-kubectl create namespace kong-dp
-```
-
 #### Create Kubernetes Secret for mTLS
 
 Create the secret for the Data Plane using the same Digital Certicate and Private Key pair:
@@ -37,6 +29,7 @@ helm install kong-dp kong/kong -n kong-dp \
 --set proxy.enabled=true \
 --set proxy.type=LoadBalancer \
 --set enterprise.enabled=true \
+--set enterprise.license_secret=kong-enterprise-license \
 --set enterprise.portal.enabled=false \
 --set enterprise.rbac.enabled=false \
 --set enterprise.smtp.enabled=false \

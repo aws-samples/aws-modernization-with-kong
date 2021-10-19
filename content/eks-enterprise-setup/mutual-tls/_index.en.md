@@ -26,10 +26,14 @@ openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
   -days 1095 -subj "/CN=kong_clustering"
 ```
 
-#### Create namespace for kong control plane
+#### Create namespace for kong control plane and kong data planes
 
 ```bash
 kubectl create namespace kong
+```
+
+```bash
+kubectl create namespace kong-dp
 ```
 
 #### Create a Kubernetes secret with the pair
@@ -40,9 +44,16 @@ kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./clu
 
 #### Mount the license key as Kubernetes Secret
 
+For Control Plane namespace
 
 ```bash
 kubectl create secret -n kong generic kong-enterprise-license --from-file=license=./license.json
+```
+
+For Data Plane namespace
+
+```bash
+kubectl create secret -n kong-dp generic kong-enterprise-license --from-file=license=./license.json
 ```
 
 
