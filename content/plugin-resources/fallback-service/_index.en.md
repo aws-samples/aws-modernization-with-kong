@@ -50,16 +50,52 @@ curl -i $DATA_PLANE_LB/cafe/status/200
 
 ```
 HTTP/1.1 200 OK
-Content-Type: text/html; charset=utf-8
-Content-Length: 0
+Content-Type: text/plain; charset=UTF-8
+Transfer-Encoding: chunked
 Connection: keep-alive
-Server: gunicorn/19.9.0
-Date:
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Credentials: true
-X-Kong-Upstream-Latency: 2
-X-Kong-Proxy-Latency: 1
-Via: kong/2.x
+Date: Tue, 19 Oct 2021 20:02:36 GMT
+Server: echoserver
+X-Kong-Upstream-Latency: 0
+X-Kong-Proxy-Latency: 0
+Via: kong/2.6.0.0-enterprise-edition
+
+
+
+Hostname: echo-5fc5b5bc84-r47nz
+
+Pod Information:
+        node name:      ip-192-168-72-99.us-east-2.compute.internal
+        pod name:       echo-5fc5b5bc84-r47nz
+        pod namespace:  default
+        pod IP: 192.168.84.208
+
+Server values:
+        server_version=nginx: 1.12.2 - lua: 10010
+
+Request Information:
+        client_address=192.168.71.216
+        method=GET
+        real path=/status/200
+        query=
+        request_version=1.1
+        request_scheme=http
+        request_uri=http://ae4164bb79dab4238859875597b65fd3-389728867.us-east-2.elb.amazonaws.com:8080/status/200
+
+Request Headers:
+        accept=*/*  
+        connection=keep-alive  
+        host=ae4164bb79dab4238859875597b65fd3-389728867.us-east-2.elb.amazonaws.com  
+        user-agent=curl/7.76.1  
+        x-forwarded-for=192.168.21.194  
+        x-forwarded-host=ae4164bb79dab4238859875597b65fd3-389728867.us-east-2.elb.amazonaws.com  
+        x-forwarded-path=/cafe/status/200  
+        x-forwarded-port=80  
+        x-forwarded-prefix=/cafe  
+        x-forwarded-proto=http  
+        x-real-ip=192.168.21.194  
+
+Request Body:
+        -no body in request-
 ```
 
 
@@ -151,3 +187,16 @@ This is not the path you are looking for. - Fallback service
 
 #### Conclusion
 Since the request is not part of any defined rule, the fallback service responds with **'This is not the path you are looking for. - Fallback service'**. 
+
+
+#### Cleanup
+
+Delete the Kong plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
+
+```bash
+kubectl delete ingress fallback
+kubectl delete service fallback-svc
+kubectl delete deployment fallback-svc
+```
+
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

@@ -83,3 +83,14 @@ After entering your data click on "Sign Up". Cognito will create a user and requ
 
 
 After typing the code, Cognito will authenticate you, issues an Authorization Code and redirects you back to the original URL (Data Plane). The Data Plane connects to Cognito with the Authorization Code to get the Access Token and then allows you to consume the URL.
+
+
+#### Cleanup
+
+Delete the Kong plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
+
+```bash
+kubectl delete kongplugin oidc
+```
+
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

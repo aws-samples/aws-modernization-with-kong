@@ -152,3 +152,15 @@ curl -k Location URL
 
 #### Results
 You can see that Kong correctly serves the request only on HTTPS protocol and redirects the user if plaint-text HTTP protocol is used. We had to use  `-k`  flag in cURL to skip certificate validation as the certificate served by Kong is a self-signed one. If you are serving this traffic via a domain that you control and have configured TLS properties for it, then the flag won't be necessary.
+
+
+#### Cleanup
+
+Delete the Kong plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
+
+```bash
+kubectl delete ingress demo-redirect
+kubectl delete kongingress demo-redirect
+```
+
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

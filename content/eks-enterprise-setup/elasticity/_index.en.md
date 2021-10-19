@@ -183,6 +183,7 @@ helm upgrade kong-dp kong/kong -n kong-dp \
 --set proxy.enabled=true \
 --set proxy.type=LoadBalancer \
 --set enterprise.enabled=true \
+--set enterprise.license_secret=kong-enterprise-license \
 --set enterprise.portal.enabled=false \
 --set enterprise.rbac.enabled=false \
 --set enterprise.smtp.enabled=false \
@@ -197,11 +198,11 @@ helm upgrade kong-dp kong/kong -n kong-dp \
 --set resources.limits.memory="800Mi" \
 --set autoscaling.enabled=true \
 --set autoscaling.minReplicas=1 \
---set autoscaling.maxReplicas=20 \
+--set autoscaling.maxReplicas=5 \
 --set autoscaling.metrics[0].type=Resource \
 --set autoscaling.metrics[0].resource.name=cpu \
 --set autoscaling.metrics[0].resource.target.type=Utilization \
---set autoscaling.metrics[0].resource.target.averageUtilization=75
+--set autoscaling.metrics[0].resource.target.averageUtilization=15
 ```
 
 ### Checking HPA
@@ -230,19 +231,6 @@ kubectl get hpa -n kong-dp
 ```bash
 NAME           REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 kong-dp-kong   Deployment/kong-dp-kong   0%/75%    1         20        1          80s
-```
-
-
-If you want to change the policy run, for example:
-
-
-```bash
-kubectl -n kong-dp patch hpa kong-dp-kong --patch '{"spec":{"targetCPUUtilizationPercentage":60}}'
-```
-**or**
-
-```bash
-kubectl -n kong-dp patch hpa kong-dp-kong --patch '{"spec":{"maxReplicas":15}}'
 ```
 
 Leave the HPA set so we can see it in action when sending requests to the Data Plane.

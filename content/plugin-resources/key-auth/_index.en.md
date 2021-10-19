@@ -55,11 +55,14 @@ curl -I $DATA_PLANE_LB/baz
 
 ```
 HTTP/1.1 401 Unauthorized
+Date: Tue, 19 Oct 2021 19:46:22 GMT
 Content-Type: application/json; charset=utf-8
 Connection: keep-alive
 WWW-Authenticate: Key realm="kong"
-Content-Length: 41
-Server: kong/2.x
+Content-Length: 45
+X-Kong-Response-Latency: 0
+Server: kong/2.6.0.0-enterprise-edition
+
 ```
 
 
@@ -70,14 +73,17 @@ curl -I $DATA_PLANE_LB/foo
 ```
 
 **Response**
+
 ```
 HTTP/1.1 401 Unauthorized
+Date: Tue, 19 Oct 2021 19:46:22 GMT
 Content-Type: application/json; charset=utf-8
 Connection: keep-alive
 WWW-Authenticate: Key realm="kong"
-Content-Length: 41
-demo:  injected-by-kong
-Server: kong/1.3.0
+Content-Length: 45
+X-Kong-Response-Latency: 0
+Server: kong/2.6.0.0-enterprise-edition
+
 ```
 
 **Results**
@@ -178,12 +184,12 @@ Content-Type: text/html; charset=utf-8
 Content-Length: 9593
 Connection: keep-alive
 Server: gunicorn/19.9.0
+Date: Tue, 19 Oct 2021 19:47:52 GMT
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true
-demo:  injected-by-kong
-X-Kong-Upstream-Latency: 3
-X-Kong-Proxy-Latency: 1
-Via: kong/2.x
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 2
+Via: kong/2.6.0.0-enterprise-edition
 ```
 **Request 2**
 
@@ -199,12 +205,12 @@ Content-Type: text/html; charset=utf-8
 Content-Length: 9593
 Connection: keep-alive
 Server: gunicorn/19.9.0
+Date: Tue, 19 Oct 2021 19:47:52 GMT
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true
-demo:  injected-by-kong
-X-Kong-Upstream-Latency: 3
-X-Kong-Proxy-Latency: 1
-Via: kong/2.x
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 2
+Via: kong/2.6.0.0-enterprise-edition
 ```
 
 **Results**
@@ -224,8 +230,10 @@ All other authentication plugins bundled with Kong work in this way and can be u
 
 #### Cleanup
 
-Delete the Kong plugin by running following command. This ensures that key authentication does not interferes with any modules in the workshop
+Delete the Kong plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
 
 ```bash
 kubectl delete kongplugin httpbin-auth
 ```
+
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

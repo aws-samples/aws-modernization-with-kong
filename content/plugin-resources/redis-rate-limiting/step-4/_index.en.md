@@ -84,8 +84,10 @@ You just configured Redis as a data-store to synchronize information across mult
 
 #### Cleanup
 
-Delete the Kong plugin by running following command. This ensures that key authentication does not interferes with any modules in the workshop
+Delete the Kong **Cluster** plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
 
 ```bash
-kubectl delete kongplugin global-rate-limit
+kubectl delete kongclusterplugin global-rate-limit
 ```
+
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

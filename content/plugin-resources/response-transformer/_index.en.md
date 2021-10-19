@@ -27,7 +27,7 @@ plugin: response-transformer
 
 **Response**
 ```
-kongplugin.configuration.konghq.com/global-rate-limit created
+kongplugin.configuration.konghq.com/add-response-header created
 ```
 
 ### Associate plugin with the ingress rule
@@ -51,17 +51,12 @@ curl -I $DATA_PLANE_LB/bar
 HTTP/1.1 200 OK
 Content-Type: text/plain; charset=UTF-8
 Connection: keep-alive
-Date:
+Date: Tue, 19 Oct 2021 19:41:18 GMT
 Server: echoserver
-X-RateLimit-Remaining-Minute: 4
-X-RateLimit-Limit-Minute: 5
-RateLimit-Remaining: 4
-RateLimit-Limit: 5
-RateLimit-Reset: 35
 demo:  injected-by-kong
-X-Kong-Upstream-Latency: 1
+X-Kong-Upstream-Latency: 0
 X-Kong-Proxy-Latency: 0
-Via: kong/2.0.3
+Via: kong/2.6.0.0-enterprise-edition
 ```
 
 
@@ -77,13 +72,13 @@ Content-Type: text/html; charset=utf-8
 Content-Length: 0
 Connection: keep-alive
 Server: gunicorn/19.9.0
-Date:
+Date: Tue, 19 Oct 2021 19:41:54 GMT
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true
 demo:  injected-by-kong
-X-Kong-Upstream-Latency: 1
-X-Kong-Proxy-Latency: 1
-Via: kong/2.x
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 0
+Via: kong/2.6.0.0-enterprise-edition
 ```
 
 #### Results
@@ -105,11 +100,12 @@ Content-Type: text/html; charset=utf-8
 Content-Length: 9593
 Connection: keep-alive
 Server: gunicorn/19.9.0
+Date: Tue, 19 Oct 2021 19:42:26 GMT
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true
-X-Kong-Upstream-Latency: 4
-X-Kong-Proxy-Latency: 1
-Via: kong/2.x
+X-Kong-Upstream-Latency: 3
+X-Kong-Proxy-Latency: 0
+Via: kong/2.6.0.0-enterprise-edition
 ```
 
 
@@ -125,15 +121,12 @@ You have successfully setup a plugin which is executed only when a request match
 
 Specifically, you configured Kong to modify the echo-server header to include "demo: injected-by-kong" before responding to the client. 
 
+#### Cleanup
 
+Delete the Kong plugin by running following command. Cleanup ensures that this plugin does not interferes with any other modules in the workshop for demo purposes and each workshop module code continues to function indepdently.
 
+```bash
+kubectl delete kongplugin add-response-header
+```
 
-
-
-
-
-
-
-
-
-
+In real world scenario, you can enable as many plugins as you like depending on your use cases.

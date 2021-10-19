@@ -37,7 +37,7 @@ Here you configure Kong for Kubernetes to rate-limit traffic from any client to 
 
 
 #### Verify traffic control
-Next, test the rate-limiting policy by executing the following command multiple times and observe the rate-limit headers in the response:
+Next, test the rate-limiting policy by executing the following command multiple times and observe the rate-limit headers in the response, specially, `X-RateLimit-Remaining-Minute`,`RateLimit-Reset`, and `Retry-After` :
 
 ```bash
 curl -I $DATA_PLANE_LB/foo-redis/headers
@@ -48,20 +48,38 @@ curl -I $DATA_PLANE_LB/foo-redis/headers
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 180
+Content-Length: 384
 Connection: keep-alive
+RateLimit-Limit: 5
+RateLimit-Remaining: 0
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Reset: 53
+X-RateLimit-Limit-Minute: 5
 Server: gunicorn/19.9.0
-Date:
+Date: Tue, 19 Oct 2021 19:51:07 GMT
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true
-X-RateLimit-Remaining-Minute: 2
-X-RateLimit-Limit-Minute: 5
-RateLimit-Remaining: 2
+X-Kong-Upstream-Latency: 1
+X-Kong-Proxy-Latency: 1
+Via: kong/2.6.0.0-enterprise-edition
+```
+
+After sending too many requests,once the rate limiting is reached, you will see `HTTP/1.1 429 Too Many Requests`
+
+```bash
+HTTP/1.1 429 Too Many Requests
+Date: Tue, 19 Oct 2021 19:51:37 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
 RateLimit-Limit: 5
-RateLimit-Reset: 34
-X-Kong-Upstream-Latency: 2
-X-Kong-Proxy-Latency: 0
-Via: kong/2.x
+RateLimit-Remaining: 0
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Reset: 23
+X-RateLimit-Limit-Minute: 5
+Retry-After: 23
+Content-Length: 41
+X-Kong-Response-Latency: 1
+Server: kong/2.6.0.0-enterprise-edition
 ```
 
 ### Results
