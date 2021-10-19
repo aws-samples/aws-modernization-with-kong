@@ -11,7 +11,7 @@ One of the most powerful capabilities provided by Kong  Enterprise is the suppor
 
 Moreover, Kong Konnect Enterprise provides a new topology option, named Hybrid Mode, with a total separation of the Control Plane (CP) and Data Plane (DP). That is, while the Control Plane is responsible for administration tasks, the Data Plane is exclusively used by API Consumers.
 
-Please, refer to the following link to read more about the Hybrid deployment: https://docs.konghq.com/enterprise/2.4.x/deployment/hybrid-mode/
+Please, refer to the following link to read more about the Hybrid deployment: https://docs.konghq.com/enterprise/2.6.x/deployment/hybrid-mode/
 
 
 #### Reference Architecture

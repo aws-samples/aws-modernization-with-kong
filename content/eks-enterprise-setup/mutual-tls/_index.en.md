@@ -39,7 +39,7 @@ kubectl create namespace kong-dp
 #### Create a Kubernetes secret with the pair
 
 ```bash
-kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./cluster.key -n kong
+kubectl create secret tls kong-cluster-cert --cert=./cluster.crt --key=./cluster.key -n kong
 ```
 
 #### Mount the license key as Kubernetes Secret

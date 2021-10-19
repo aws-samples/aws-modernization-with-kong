@@ -8,7 +8,7 @@ weight = 13
 Create the secret for the Data Plane using the same Digital Certicate and Private Key pair:
 
 ```bash
-kubectl create secret tls kong-cluster-cert \-\-cert=./cluster.crt \-\-key=./cluster.key -n kong-dp
+kubectl create secret tls kong-cluster-cert --cert=./cluster.crt --key=./cluster.key -n kong-dp
 ```
 
 #### Install the Data Plane
