@@ -91,6 +91,7 @@ Delete the Kong plugin by running following command. Cleanup ensures that this p
 
 ```bash
 kubectl delete kongplugin oidc
+aws cloudformation delete-stack --stack-name cognito-$C9_PID
 ```
 
 In real world scenario, you can enable as many plugins as you like depending on your use cases.

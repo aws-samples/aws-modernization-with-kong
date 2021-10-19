@@ -13,8 +13,9 @@ pre = "<b>7. </b>"
 aws iam detach-role-policy --role-name $ROLE_NAME --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy   
 ```
 
-#### Delete the EKS Cluster
+#### Delete the Cognito Pool and EKS Cluster
 
 ```bash
+aws cloudformation delete-stack --stack-name cognito-$C9_PID
 eksctl delete cluster --name $EKS_CLUSTERNAME   
 ```
