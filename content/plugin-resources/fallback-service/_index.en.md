@@ -17,7 +17,7 @@ echo '
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: demo
+  name: demo-fallback
   annotations:
     konghq.com/strip-path: "true"
     kubernetes.io/ingress.class: kong
