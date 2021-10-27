@@ -91,7 +91,7 @@ In the "Domain prefix" field type "kongidp" and click on "Check availability" to
 
 ## Test the Ingress using HTTP/S
 <pre>
-$ http --verify=no https://a946e3cab079a49a1b6661ab62d5585f-2135097986.us-east-1.elb.amazonaws.com/sampleroute/hello
+$ http --verify=no https://a0771705c8a114f7da5a179494d2108e-1744117948.us-east-2.elb.amazonaws.com/sampleroute/hello
 HTTP/1.1 200 OK
 Connection: keep-alive
 Content-Length: 45

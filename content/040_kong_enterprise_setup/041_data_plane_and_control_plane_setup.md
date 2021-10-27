@@ -106,7 +106,7 @@ helm install kong kong/kong -n kong \
 --set clustertelemetry.tls.servicePort=8006 \
 --set clustertelemetry.tls.containerPort=8006 \
 --set image.repository=kong/kong-gateway \
---set image.tag=2.5.1.0-alpine \
+--set image.tag=2.6.0.0-alpine \
 --set admin.enabled=true \
 --set admin.http.enabled=true \
 --set admin.type=LoadBalancer \
@@ -115,7 +115,7 @@ helm install kong kong/kong -n kong \
 --set ingressController.enabled=true \
 --set ingressController.installCRDs=false \
 --set ingressController.image.repository=kong/kubernetes-ingress-controller \
---set ingressController.image.tag=1.3.2-alpine \
+--set ingressController.image.tag=2.0.2 \
 --set postgresql.enabled=true \
 --set postgresql.postgresqlUsername=kong \
 --set postgresql.postgresqlDatabase=kong \
@@ -165,7 +165,7 @@ Install the Data Plane
 helm install kong-dp kong/kong -n kong-dp \
 --set ingressController.enabled=false \
 --set image.repository=kong/kong-gateway \
---set image.tag=2.5.1.0-alpine \
+--set image.tag=2.6.0.0-alpine \
 --set env.database=off \
 --set env.role=data_plane \
 --set env.cluster_cert=/etc/secrets/kong-cluster-cert/tls.crt \
@@ -237,20 +237,20 @@ kube-system   kube-dns                     ClusterIP      10.100.0.10      <none
 ## Checking the Kong Konnect Rest Admin API port
 Use the Load Balancer created during the deployment
 <pre>
-$ kubectl get service kong-kong-admin \-\-output=jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n kong
-a9ed78cc5bb954931aec1b5bf48298f6-2098365612.us-east-1.elb.amazonaws.com
+$ kubectl get service kong-kong-admin --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n kong
+a655cc68831554264b1d0d8211fc6d12-834035524.us-east-2.elb.amazonaws.com
 </pre>
 
 <pre>
-$ http a9ed78cc5bb954931aec1b5bf48298f6-2098365612.us-east-1.elb.amazonaws.com:8001 | jq -r .version
-2.5.1.0-enterprise-edition
+$ http a655cc68831554264b1d0d8211fc6d12-834035524.us-east-2.elb.amazonaws.com:8001 | jq -r .version
+2.6.0.0-enterprise-edition
 </pre>
 
 
 ## Checking the Data Plane from the Control Plane
 
 <pre>
-$ http a9ed78cc5bb954931aec1b5bf48298f6-2098365612.us-east-1.elb.amazonaws.com:8001/clustering/status
+$ http a655cc68831554264b1d0d8211fc6d12-834035524.us-east-2.elb.amazonaws.com:8001/clustering/status
 HTTP/1.1 200 OK
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: http://abd76df53f5584e8f800a9f9ac73d5fa-21140374.us-east-1.elb.amazonaws.com:8002
@@ -285,7 +285,7 @@ a946e3cab079a49a1b6661ab62d5585f-2135097986.us-east-1.elb.amazonaws.com
 </pre>
 
 <pre>
-$ http a946e3cab079a49a1b6661ab62d5585f-2135097986.us-east-1.elb.amazonaws.com
+$ http a0771705c8a114f7da5a179494d2108e-1744117948.us-east-2.elb.amazonaws.com
 HTTP/1.1 404 Not Found
 Connection: keep-alive
 Content-Length: 48
@@ -303,11 +303,11 @@ X-Kong-Response-Latency: 0
 ## Configuring Kong Manager Service
 Kong Manager is the Control Plane Admin GUI. It should get the Admin URI configured with the same Load Balancer address:
 <pre>
-kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_API_URI\", \"value\": \"a9ed78cc5bb954931aec1b5bf48298f6-2098365612.us-east-1.elb.amazonaws.com:8001\" }]}]}}}}"
+kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_API_URI\", \"value\": \"a655cc68831554264b1d0d8211fc6d12-834035524.us-east-2.elb.amazonaws.com:8001\" }]}]}}}}"
 </pre>
 
 <pre>
-kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_GUI_URL\", \"value\": \"http:\/\/abd76df53f5584e8f800a9f9ac73d5fa-21140374.us-east-1.elb.amazonaws.com:8002\" }]}]}}}}"
+kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_GUI_URL\", \"value\": \"http:\/\/afac431d2211048f7af0a495702e24ce-485287897.us-east-2.elb.amazonaws.com:8002\" }]}]}}}}"
 </pre>
 
 
@@ -316,21 +316,21 @@ kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"s
 ### Configuring Kong Dev Portal
 <pre>
 $ kubectl get service kong-kong-portalapi -n kong --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-a0e9f107ba17749e5ac1542792a049f2-1349476423.us-east-1.elb.amazonaws.com
+a5b58a172038b435ea9e4f87d22a1d47-2017253663.us-east-1.elb.amazonaws.com
 </pre>
 
 <pre>
-kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_PORTAL_API_URL\", \"value\": \"http://a0e9f107ba17749e5ac1542792a049f2-1349476423.us-east-1.elb.amazonaws.com:8004\" }]}]}}}}"
+kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_PORTAL_API_URL\", \"value\": \"http://a5b58a172038b435ea9e4f87d22a1d47-2017253663.us-east-1.elb.amazonaws.com:8004\" }]}]}}}}"
 </pre>
 
 
 <pre>
 $ kubectl get service kong-kong-portal -n kong --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-a4d6e108295f5458e9cffa00856c1fb2-1667372698.us-east-1.elb.amazonaws.com
+a2f21075ccdbc4ca9bf5dfa77b44146c-1408300917.us-east-1.elb.amazonaws.com
 </pre>
 
 <pre>
-kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_PORTAL_GUI_HOST\", \"value\": \"a4d6e108295f5458e9cffa00856c1fb2-1667372698.us-east-1.elb.amazonaws.com:8003\" }]}]}}}}"
+kubectl patch deployment -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_PORTAL_GUI_HOST\", \"value\": \"a2f21075ccdbc4ca9bf5dfa77b44146c-1408300917.us-east-1.elb.amazonaws.com:8003\" }]}]}}}}"
 </pre>
 
 
@@ -342,10 +342,10 @@ Login to Kong Manager using the specific ELB:
 
 <pre>
 $ kubectl get service kong-kong-manager -n kong --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-abd76df53f5584e8f800a9f9ac73d5fa-21140374.us-east-1.elb.amazonaws.com
+afac431d2211048f7af0a495702e24ce-485287897.us-east-2.elb.amazonaws.com
 </pre>
 
-If you redirect your browser to http://abd76df53f5584e8f800a9f9ac73d5fa-21140374.us-east-1.elb.amazonaws.com:8002 you should see the Kong Manager landing page:
+If you redirect your browser to http://afac431d2211048f7af0a495702e24ce-485287897.us-east-2.elb.amazonaws.com:8002 you should see the Kong Manager landing page:
 
 ![kong_manager](/images/kong_manager.png)
 

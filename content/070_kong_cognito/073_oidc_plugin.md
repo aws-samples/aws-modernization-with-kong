@@ -46,7 +46,7 @@ kubectl annotate ingress sampleroute konghq.com/plugins-
 
 
 ## Consume the Route with a Browser
-https://a946e3cab079a49a1b6661ab62d5585f-2135097986.us-east-1.elb.amazonaws.com/sampleroute/hello
+https://ae62967db05d7486190338dd394ee88e-709588401.us-east-1.elb.amazonaws.com/sampleroute/hello
 
 
 After accepting the Server Certificate, sInce you haven't been authenticated, you will be redirected to Cognito's Authentication page:
