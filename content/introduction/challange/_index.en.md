@@ -1,10 +1,7 @@
 +++
-title = "Challange"
+title = "Challenge"
 weight = 12
 +++
-
-
-# The Challange 
 
 Every organization is under pressure to innovate by providing compelling digital experiences. Organizations overcome this challenge through applications that are built with modern architectures using microservices and containers, managed through Kubernetes. These modern methods deliver the agility needs of the businesses.
 
