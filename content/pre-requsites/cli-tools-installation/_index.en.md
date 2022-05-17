@@ -5,7 +5,7 @@ weight = 12
 
 #### Launching AWS Cloud9
 
-You can launch AWS CloudShell from the AWS Management Console by opening [this link](https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2). 
+You can launch AWS Cloud9 from the AWS Management Console by opening [this link](https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2). 
 
 1. Select Create environment
 2. Give it a name you like

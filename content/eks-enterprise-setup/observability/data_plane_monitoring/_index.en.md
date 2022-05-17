@@ -100,7 +100,7 @@ Forwarding from 127.0.0.1:8100 -> 8100
 Forwarding from [::1]:8100 -> 8100
 ```
 
-Now open another tab from AWS Cloudshell (go to **Actions** > **New Tab**)
+Now open another tab from your Cloud9 environment (go to **Actions** > **New Tab**)
 
 ```bash
 curl localhost:8100/metrics

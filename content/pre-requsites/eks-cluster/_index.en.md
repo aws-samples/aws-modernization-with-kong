@@ -79,7 +79,7 @@ bash
 
 ##### What if i dont see the expected output as above ?
 
-Incase you get disconnected from network, AWS Cloudshell may not be able to complete all actions that are executed sequentially using `eksctl create cluster` command. In such event, take the following actions
+Incase you get disconnected from network, AWS Cloud9 may not be able to complete all actions that are executed sequentially using `eksctl create cluster` command. In such event, take the following actions
 
 1. List the cluster created
 

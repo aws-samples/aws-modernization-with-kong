@@ -1,111 +1,46 @@
-# AWS Workshop Studio has launched!
+### Hugo Theme Installation
+The Hugo Learn Theme is referenced by [git submodule](.gitmodules). To download it, run the following commands:
 
-Workshop publishing has moved to [AWS Workshop Studio](https://studio.us-east-1.prod.workshops.aws/) as of August 2021.  
-
-If you're starting work on a new workshop, please use Workshop Studio. If you've already created a workshop using this template, please consult our [wiki](https://w.amazon.com/bin/view/AWS/Teams/SA/Customer_Engagements/workshops/) for information on publishing, migration to Workshop Studio, etc.  
-
-If your workshop markdown source will be hosted on GitHub under AWS-Samples you may proceed with this template, and note the special instructions for open sourcing under the "Preparing your workshop for open source" heading below. Long-term, we'll aim to support direct builds from AWS-Samples into Workshop Studio, but until then workshops with Github-hosted markdown source will remain using our older workshops.aws publishing mechanism.
-
-
-## Security and regulatory compliance
-Historically, SAs and others have created and hosted workshops in their own AWS accounts, Github, S3 buckets, Word documents, and other places. This makes it hard to discover workshops, hard to find the owner to collaborate on improvements, and hard to ensure workshops meet our quality and compliance bar. The SA Customer Engagements team has launched [Workshop Studio](https://w.amazon.com/bin/view/AWS_Workshop_Studio/) to provide secure, discoverable, high quality workshops that do not expose Amazon to legal or policy concerns. (all issues we have seen with self-published workshops). 
-
-
-## Repo structure
-
-```bash
-.
-├── metadata.yml                      <-- Metadata file with descriptive information about the workshop
-├── README.md                         <-- This instructions file
-├── deck                              <-- Directory for presentation deck (Future use)
-├── resources                         <-- Directory for workshop resources (Future use)
-│   ├── code                          <-- Directory for workshop modules code
-│   ├── policies                      <-- Directory for workshop modules IAM Roles and Policies
-│   ├── templates                     <-- Directory for workshop modules CloudFormation templates
-    └── Workshop Review document.doc  <-- Workshop Review document to be completed before your workshop is published
-└── workshop                          
-    ├── config.toml                   <-- Hugo configuration file for the workshop website
-    └── content                       <-- Markdown files for pages/steps in workshop
-    └── static                        <-- Any static assets to be hosted alongside the workshop (ie. images, scripts, documents, etc)
-    └── themes                        <-- AWS Style Hugo Theme (Do not edit!)
 ```
 
-## What's Included
+$ git submodule update --init --recursive
 
-This project includes the following folders:
+$ git submodule update --remote --merge
 
-* `workshop`: This is the core workshop folder. This is generated as HTML and hosted for presentation for customers.
-* `Workshop Review document`: This is the current Workshop Review document. All workshops need to be reviewed by someone other than the author, before they can be published.
-* `deck`: **UNUSED RIGHT NOW** Future location to store your presentation materials. For now, you should store them centrally in KnowledgeMine. 
-* `resources`:  **UNUSED RIGHT NOW** Store any example code, IAM policies, or Cloudformation templates needed by your workshop here.
-
-
-## Requirements
-
-1. [Clone this repository](https://help.github.com/articles/fork-a-repo/).
-2. Install[Hugo](https://gohugo.io/overview/quickstart/) on your laptop. As of 1 Aug 2020, the workshop.aws build process uses [Hugo 0.74.3](https://github.com/gohugoio/hugo/releases/tag/v0.74.3) so you should probably use that version.
-
-
-# Getting Started
-
-## Navigate to the `workshop` directory
-
-All command line directions in this documentation assume you are in the `workshop` directory. Navigate there now, if you aren't there already.
-
-```bash
-cd Aws-workshop-template/workshop
 ```
 
-## Launching the website locally, and follow the tutorial
+### Hugo Installation
 
-Run the following command to get Hugo to build the template and run it locally using its in-built server:
+On Mac, use brew to install the Hugo server.
 
-```bash
+```
+$ brew install hugo
+```
+
+### Start the Hugo Server for Local Development
+Start the Hugo server to view your website. This will render in memory.
+
+```
 hugo server
 ```
 
-Go to `http://localhost:1313`
-
-You should notice three things:
-
-1. You have a left-side **Intro** menu, containing menu items that match the directory structure in the "workshop" directory.
-2. The home page explains how to customize it by following the instructions.
-3. When you run `hugo server`, when the contents of the files change, the page automatically refreshes with the changes. Neat!
-
-
-## Things to be aware of:
-
-* Remove the links to "Event Outfitters" from the bottom of the front page before you publish your workshop.
-* Update the config.toml with your workshop name - the default is at the top, and also under the section [Languages.en]
-```
-title = "My AWS Workshop"
-```
-* The template includes two sample languages, French and English (eg "_index.en.md" and "_index.fr.md"). Remove the example French language selection from the **config.toml** unless you plan to provide a French-language version of your content. Delete the following lines:
-```
-[Languages.fr]
-title = "Mon atelier AWS"
-weight = 2
-languageName = "Français"
-```
-
-## Preparing your workshop for open source
-
-**[ACTION REQUIRED]** If you plan to open source your workshop:
-
-Before commiting your workshop package to `aws-samples` or another open source repository you must run the `open-source.sh` script in the root directory. This script will zip up the following directories and files: 
+### Generate Your Content to Disk
+To render your pages to disk (for publishing), you can run your server with the following flag:
 
 ```
-workshop/content
-workshop/static
-workshop/config.toml
-README-local.md
-theme.sh 
+hugo server --renderToDisk
 ```
 
-The resulting workshop.zip file should be attached to your SIM ticket for review by the Open Source team.
+or use the hugo command to perform a one-time generation.
 
-**It is your responsibility to confirm** that no boilerplate content is included in your final zip (e.g.; Make sure you remove the template content from the workshop/content/ directory and you are not including Amazon IP or logos in the workshop/static/ directory).
+```
+hugo
+```
 
-The end user will `git clone` your workshop markdown from `aws-samples` and follow the instructions in README-local.md to copy the open source Hugo Learn theme and run `hugo serve` to render the markdown locally.
+## Security
 
-**[ACTION REQUIRED]** If you use shortcodes in your workshop markdown you should review the currently supported shortcodes in the Hugo Learn theme that users will be using: [https://github.com/matcornic/hugo-theme-learn](https://github.com/matcornic/hugo-theme-learn). Shortcodes such as `img` and `siteurl` may not be supported by the open source Hugo theme and that markdown should be changed prior to running `open-source.sh`. Failure to address missing shortcodes will result in the user being unable to build the workshop locally. To test the workshop yourself run `open-source.sh` and unzip the workshop.zip file. Open a terminal window from the unpacked workshop directory and follow the steps in `README-local.md` to pull the Hugo Learn theme and run `hugo learn`. If Hugo detects any undefined shortcodes they will be presented as a build error. 
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## License
+
+This library is licensed under the MIT-0 License. See the LICENSE file.
