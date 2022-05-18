@@ -8,9 +8,11 @@ Expose the echo and httpbin services outside the Kubernetes cluster by defining 
 #### Add ingress resource for echo service
 Add an Ingress resource which proxies requests to  /foo to the httpbin service and /bar to the echo service
 
+**NOTE** This is the new syntax for Kubernetes version 1.22 onwards
+
 ```bash
 echo '
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: demo
@@ -22,13 +24,19 @@ spec:
   - http:
       paths:
       - path: /foo
+        pathType: Prefix
         backend:
-          serviceName: httpbin
-          servicePort: 80
+          service:
+            name: httpbin
+            port: 
+              number: 80
       - path: /bar
+        pathType: Prefix
         backend:
-          serviceName: echo
-          servicePort: 80
+          service:
+            name: echo
+            port: 
+              number: 80
 ' | kubectl apply -f -
 ```
 
@@ -127,9 +135,11 @@ Let's add an Ingress resource which proxies requests to  /baz to the httpbin ser
 
 We will use this path later.
 
+**NOTE** This is the new syntax for Kubernetes version 1.22 onwards
+
 ```bash
 echo '
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: demo-2
@@ -141,9 +151,12 @@ spec:
   - http:
       paths:
       - path: /baz
+        pathType: Prefix
         backend:
-          serviceName: httpbin
-          servicePort: 80
+          service:
+            name: httpbin
+            port: 
+              number: 80
 ' | kubectl apply -f -
 ```
 
