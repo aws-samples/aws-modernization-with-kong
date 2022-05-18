@@ -14,7 +14,7 @@ Add an Ingress resource which proxies requests to and /cafe to the echo service
 
 ```bash
 echo '
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: demo-fallback
@@ -26,9 +26,12 @@ spec:
   - http:
       paths:
       - path: /cafe
+        pathType: Prefix
         backend:
-          serviceName: echo
-          servicePort: 80
+          service:
+            name: echo
+            port: 
+              number: 80
 ' | kubectl apply -f -
 ```
 

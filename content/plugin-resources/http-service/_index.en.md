@@ -11,7 +11,7 @@ Add an Ingress rule to proxy requests  to /foo-redirect to the httpbin  service
 
 ```bash
 echo '
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: demo-redirect
@@ -23,9 +23,12 @@ spec:
   - http:
       paths:
       - path: /foo-redirect
+        pathType: Prefix
         backend:
-          serviceName: httpbin
-          servicePort: 80
+          service:
+            name: httpbin
+            port: 
+              number: 80
 ' | kubectl apply -f -
 ```
 
