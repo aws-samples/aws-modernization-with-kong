@@ -10,7 +10,7 @@ Let's add an Ingress rule which proxies requests to /redis to the httpbin-2 serv
 
 ```bash
 echo '
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: demo-redis
@@ -22,9 +22,12 @@ spec:
   - http:
       paths:
       - path: /foo-redis
+        pathType: Prefix
         backend:
-          serviceName: httpbin-2
-          servicePort: 80
+          service:
+            name: httpbin-2
+            port: 
+              number: 80
 ' | kubectl apply -f -
 ```
 
